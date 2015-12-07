@@ -3,12 +3,10 @@ import kivy
 kivy.require('1.0.4')
 import socket, select, string, sys
 import thread
-import threading
 from kivy.app import App
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-import Queue
 
 class MyApp(App):
 
@@ -17,10 +15,11 @@ class MyApp(App):
             self.action = action
             self.msg = msg
 
+    button = None
     s = None
     opened = False
-    textinput = TextInput(size_hint=(1,1))
-    q = Queue.Queue()
+    prevent_mirror = False
+    textinput = TextInput(size_hint=(1,0.9))
 
     def prompt(self):
         sys.stdout.write('<You> ')
@@ -33,11 +32,13 @@ class MyApp(App):
             print "s is None"
         self.prompt()
 
+    def on_empty(self, instance, value):
+        pass
+
     def recieve_data(self, msg):
-        #textinput = self.textinput
-        #if textinput is not None:
-        #self.textinput.text = msg
-        print msg
+        if self.opened:
+            self.prevent_mirror = True
+            self.textinput.text = msg
         self.prompt()
 
     def start_network(self):
@@ -76,6 +77,7 @@ class MyApp(App):
                         sys.exit()
                     else :
                         #print data
+                        self.opened = True
                         self.recieve_data(data)
                 #user entered a message
                 else :
@@ -95,7 +97,8 @@ class MyApp(App):
 
         box = BoxLayout(orientation='vertical')
         box.add_widget(textinput)
-        #textinput.text = "sample"
+        self.button = Button(text='Hello world', font_size=14)
+        box.add_widget(self.button)
         t = thread
         t.start_new_thread(self.start_network,())
         return box
@@ -107,9 +110,11 @@ class MyApp(App):
             self.opened = True
         if self.opened:
             print "[sended]"
-            self.send_data(value)
+            if self.prevent_mirror:
+                self.prevent_mirror=False
+            else:
+                self.send_data(value)
         print value
-
 
 #main function
 if __name__ == "__main__":
