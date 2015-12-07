@@ -16,6 +16,8 @@ class MyApp(App):
             self.msg = msg
 
     button = None
+    row = 1
+    col = 1
     s = None
     opened = False
     prevent_mirror = False
@@ -32,13 +34,12 @@ class MyApp(App):
             print "s is None"
         self.prompt()
 
-    def on_empty(self, instance, value):
-        pass
-
     def recieve_data(self, msg):
         if self.opened:
             self.prevent_mirror = True
+            tmp = self.textinput.cursor
             self.textinput.text = msg
+            self.textinput.cursor = tmp
         self.prompt()
 
     def start_network(self):
@@ -97,7 +98,7 @@ class MyApp(App):
 
         box = BoxLayout(orientation='vertical')
         box.add_widget(textinput)
-        self.button = Button(text='Hello world', font_size=14)
+        self.button = Button(text='Hello world', font_size=14, size_hint=(1,0.1))
         box.add_widget(self.button)
         t = thread
         t.start_new_thread(self.start_network,())
