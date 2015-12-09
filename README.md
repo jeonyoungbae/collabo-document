@@ -1,6 +1,11 @@
-# collabo documents
+# Collabo Document
 
 For execute this code, you new to at least kivy version ('1.0.4')
+
+```h
+$ sudo pip install kivy
+```
+
 
 ## Server
 ```sh
