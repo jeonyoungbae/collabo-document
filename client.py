@@ -16,8 +16,6 @@ class MyApp(App):
             self.msg = msg
 
     button = None
-    row = 1
-    col = 1
     s = None
     opened = False
     prevent_mirror = False
@@ -29,7 +27,9 @@ class MyApp(App):
 
     def send_data(self, msg):
         if self.s is not None:
-            self.s.send(msg)
+            row = str(self.textinput.cursor_row)
+            col = str(self.textinput.cursor_col)
+            self.s.send(row+" "+col+" "+msg)
         else:
             print "s is None"
         self.prompt()
