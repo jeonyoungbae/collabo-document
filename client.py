@@ -29,7 +29,7 @@ class MyApp(App):
         if self.s is not None:
             row = str(self.textinput.cursor_row)
             col = str(self.textinput.cursor_col)
-            self.s.send(row+" "+col+" "+msg)
+            self.s.send(msg)
         else:
             print "s is None"
         self.prompt()
